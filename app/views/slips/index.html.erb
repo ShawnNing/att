@@ -1,0 +1,25 @@
+<h1>Listing slips</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @slips.each do |slip| %>
+      <tr>
+        <td><%= link_to 'Show', slip %></td>
+        <td><%= link_to 'Edit', edit_slip_path(slip) %></td>
+        <td><%= link_to 'Destroy', slip, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Slip', new_slip_path %>

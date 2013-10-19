@@ -1,0 +1,71 @@
+railty@u1204:~/att$ rails g scaffold post title:string body:string starred:boolean
+      invoke  mongoid
+      create    app/models/post.rb
+      invoke    test_unit
+      create      test/models/post_test.rb
+      create      test/fixtures/posts.yml
+      invoke  resource_route
+       route    resources :posts
+      invoke  scaffold_controller
+      create    app/controllers/posts_controller.rb
+      invoke    erb
+      create      app/views/posts
+      create      app/views/posts/index.html.erb
+      create      app/views/posts/edit.html.erb
+      create      app/views/posts/show.html.erb
+      create      app/views/posts/new.html.erb
+      create      app/views/posts/_form.html.erb
+      invoke    test_unit
+      create      test/controllers/posts_controller_test.rb
+      invoke    helper
+      create      app/helpers/posts_helper.rb
+      invoke      test_unit
+      create        test/helpers/posts_helper_test.rb
+      invoke    jbuilder
+      create      app/views/posts/index.json.jbuilder
+      create      app/views/posts/show.json.jbuilder
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/posts.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/posts.css.scss
+      invoke  scss
+      create    app/assets/stylesheets/scaffolds.css.scss
+railty@u1204:~/att$ 
+railty@u1204:~/att$ 
+railty@u1204:~/att$ rake db:mongoid:create_indexes
+I, [2013-10-15T13:29:51.833482 #20868]  INFO -- : MONGOID: Created indexes on Post:
+I, [2013-10-15T13:29:51.833800 #20868]  INFO -- : MONGOID: Index: {:starred=>1}, Options: {}
+railty@u1204:~/att$ rails g scaffold comment body:string
+      invoke  mongoid
+      create    app/models/comment.rb
+      invoke    test_unit
+      create      test/models/comment_test.rb
+      create      test/fixtures/comments.yml
+      invoke  resource_route
+       route    resources :comments
+      invoke  scaffold_controller
+      create    app/controllers/comments_controller.rb
+      invoke    erb
+      create      app/views/comments
+      create      app/views/comments/index.html.erb
+      create      app/views/comments/edit.html.erb
+      create      app/views/comments/show.html.erb
+      create      app/views/comments/new.html.erb
+      create      app/views/comments/_form.html.erb
+      invoke    test_unit
+      create      test/controllers/comments_controller_test.rb
+      invoke    helper
+      create      app/helpers/comments_helper.rb
+      invoke      test_unit
+      create        test/helpers/comments_helper_test.rb
+      invoke    jbuilder
+      create      app/views/comments/index.json.jbuilder
+      create      app/views/comments/show.json.jbuilder
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/comments.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/comments.css.scss
+      invoke  scss
+   identical    app/assets/stylesheets/scaffolds.css.scss
