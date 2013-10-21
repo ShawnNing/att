@@ -7,8 +7,7 @@ class ApplicationController < ActionController::Base
   
   def load_store
     @store = Store.find(params[:store_id]) if params[:store_id] != nil
-    @store ||= Store.where(:name=>cookies[:current_store])[0]
-    @store ||= Store.where(:name=>cookies[:current_store])[0]
-    @store ||= Store.where(:name=>Att::Application.config.init_store)[0]
+    @store ||= Store.where(:name=>cookies[:current_store]).first
+    @store ||= Store.where(:name=>Att::Application.config.init_store).first
   end    
 end

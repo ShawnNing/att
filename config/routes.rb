@@ -3,7 +3,9 @@ Att::Application.routes.draw do
 
   resources :slips
 
-  resources :payrolls
+  resources :payrolls do 
+    resources :employees
+  end
 
   resources :employees do
     member do

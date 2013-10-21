@@ -12,7 +12,8 @@
   <tbody>
     <% @payrolls.each do |payroll| %>
       <tr>
-        <td><%= link_to 'Show', payroll %></td>
+        <td><%= link_to payroll.start_date, payroll %></td>
+        <td><%= link_to payroll.end_date, payroll %></td>
         <td><%= link_to 'Edit', edit_payroll_path(payroll) %></td>
         <td><%= link_to 'Destroy', payroll, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

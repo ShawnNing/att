@@ -6,19 +6,18 @@ class PayrollsController < ApplicationController
   def index
     @payrolls = Payroll.all
   end
-
+  
   # GET /payrolls/1
   # GET /payrolls/1.json
   def show
+    @angularjs = true
   end
 
   # GET /payrolls/new
   def new
     @payroll = Payroll.new
-    
-    @start_dt = Date.today.last_week.last_week.monday.strftime("%Y/%m/%d")
-    @end_dt = Date.today.last_week.sunday.strftime("%Y/%m/%d")
-
+    @start_date = Date.today.last_week.last_week.monday.strftime("%Y/%m/%d")
+    @end_date = Date.today.last_week.sunday.strftime("%Y/%m/%d")
 		@angularjs = true
   end
 
@@ -30,7 +29,6 @@ class PayrollsController < ApplicationController
   # POST /payrolls.json
   def create
     @payroll = Payroll.new(payroll_params)
-
     respond_to do |format|
       if @payroll.save
         format.html { redirect_to @payroll, notice: 'Payroll was successfully created.' }
@@ -74,6 +72,6 @@ class PayrollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payroll_params
-      params[:payroll]
+      params.require(:payroll).permit(:start_date, :end_date)
     end
 end

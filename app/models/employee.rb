@@ -4,6 +4,7 @@ class Employee
   include Mongoid::Paperclip
   
   belongs_to :store
+  belongs_to :payroll
   has_many :punches
   
   field :num, type: String    
@@ -41,5 +42,17 @@ class Employee
   field :notes, type: String  
   field :oid, type: Integer
   
+  #temporary variable, got to be a better way
+  field :work_hours, type: Float
+  
   has_mongoid_attached_file :photo
+  
+  def work_hours
+    wh = 0
+    if self.punches.length>4 then
+    self.punches.each do |punch|
+debugger
+    end
+    end
+  end
 end

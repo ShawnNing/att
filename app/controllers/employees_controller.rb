@@ -4,7 +4,29 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
-    @employees = @store.employees
+    if params[:payroll_id] != nil then
+      @payroll = Payroll.find(params[:payroll_id])
+      @employees = @payroll.employees
+    else
+      @employees = @store.employees
+    end
+
+    if params[:with_work_hours] then
+      @employees.each do |employee|
+        #employee.work_hours = 10
+      end
+    end
+
+    respond_to do |format|
+      format.html
+      format.json do 
+        if params[:with_work_hours] then
+          render json: @employees, :include=>:work_hours
+        else
+          render json: @employees 
+        end
+      end
+    end
   end
 
   # GET /employees/1
