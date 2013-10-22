@@ -44,20 +44,21 @@
 </div>
 
 <script type="text/javascript">
-var anApp = angular.module('anApp', ['ui.bootstrap']);
+var anApp = angular.module('anApp', ['ui.bootstrap', 'ngResource'])
+.config(function($httpProvider){
+  $httpProvider.defaults.headers.put = {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')};
+});
 
-anApp.controller('EmployeesCtrl', function EmployeesCtrl($scope, $http) {
+anApp.controller('EmployeesCtrl', function EmployeesCtrl($scope, $resource) {
 
-	$http.defaults.headers.put = {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
-
-  $http.get('<%=get_employee_hours_payroll_path(@payroll, :format=>'json')%>').success(function(data) {
+  $resource('<%=get_employee_hours_payroll_path(@payroll, :format=>'json')%>').query(function(data) {
     $scope.employees = data;
     data.forEach(function(employee) {
       employee.note = '';
     });
   });
   
-  $http.get('<%=payroll_employees_path(@payroll, :format=>'json')%>').success(function(data) {
+  $resource('<%=payroll_employees_path(@payroll, :format=>'json')%>').query(function(data) {
     $scope.payroll_employees = data;
   });
   
@@ -77,9 +78,14 @@ anApp.controller('EmployeesCtrl', function EmployeesCtrl($scope, $http) {
   }
 	
   $scope.updatePayroll = function(){
-		$http.put('<%=payroll_path(@payroll, :format=>'json')%>', $scope.payroll_employees).success(function(data) {
+		$resource('<%=store_path(@store, :format=>'json')%>', {store:{name:'aaaa'}}, {update:{method:'PUT'}}).update(function(data) {
 			console.log(data);
 		});
+
+
+		//$resource('<%=payroll_path(@payroll, :format=>'json')%>', $scope.payroll_employees, {update: {method:'PUT' }}).save(function(data) {
+//			console.log(data);
+		//});
   }
   
   $scope.predicate = '-num';
