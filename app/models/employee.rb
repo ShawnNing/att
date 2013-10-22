@@ -47,12 +47,18 @@ class Employee
   
   has_mongoid_attached_file :photo
   
-  def work_hours
+  def get_work_hours(start_date, end_date)
     wh = 0
-    if self.punches.length>4 then
-    self.punches.each do |punch|
-debugger
-    end
-    end
+		last_checkin = nil
+    
+		self.punches.and({:time.gt => start_date}, {:time.lt => end_date}).order_by(:time.asc).each do |punch|
+			if punch.action == 'checkin' then
+				last_checkin = punch.time
+			elsif punch.action == 'checkout' then
+				wh = wh + (punch.time - last_checkin) * 1.day.seconds / 1.hour.seconds.to_f
+			end
+		end
+		return wh
   end
+
 end

@@ -1,6 +1,6 @@
 def import_stores
   Store.destroy_all
-  stores = JSON.parse(File.read("/tmp/stores.json"))
+  stores = JSON.parse(File.read("db/stores.json"))
   stores.each do |store|
     puts "--------------"
     n_store = Store.new
@@ -18,7 +18,7 @@ end
 
 def import_employees
   Employee.destroy_all
-  employees = JSON.parse(File.read("/tmp/employees.json"))
+  employees = JSON.parse(File.read("db/employees.json"))
   employees.each do |employee|
     puts "--------------"
     n_employee = Employee.new
@@ -43,7 +43,7 @@ end
 
 def import_punches
   Punch.destroy_all
-  punches = JSON.parse(File.read("/tmp/punches.json"))
+  punches = JSON.parse(File.read("db/punches.json"))
   punches.each do |punch|
     puts "--------------"
     n_punch = Punch.new

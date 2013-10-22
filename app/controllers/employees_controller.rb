@@ -11,21 +11,9 @@ class EmployeesController < ApplicationController
       @employees = @store.employees
     end
 
-    if params[:with_work_hours] then
-      @employees.each do |employee|
-        #employee.work_hours = 10
-      end
-    end
-
     respond_to do |format|
       format.html
-      format.json do 
-        if params[:with_work_hours] then
-          render json: @employees, :include=>:work_hours
-        else
-          render json: @employees 
-        end
-      end
+      format.json {render json: @employees}
     end
   end
 

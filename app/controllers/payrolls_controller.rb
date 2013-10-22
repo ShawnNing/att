@@ -43,6 +43,7 @@ class PayrollsController < ApplicationController
   # PATCH/PUT /payrolls/1
   # PATCH/PUT /payrolls/1.json
   def update
+		debugger
     respond_to do |format|
       if @payroll.update(payroll_params)
         format.html { redirect_to @payroll, notice: 'Payroll was successfully updated.' }
@@ -64,6 +65,23 @@ class PayrollsController < ApplicationController
     end
   end
 
+  def get_employee_hours
+		@payroll = Payroll.find(params[:id])
+		@employees = @store.employees
+
+		@employees.each do |employee|
+			employee.work_hours = employee.get_work_hours(@payroll.start_date, @payroll.end_date)
+		end
+
+    respond_to do |format|
+      format.html
+      format.json do 
+#				render json: @employees, :include=>:work_hours
+				render json: @employees 
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_payroll
@@ -72,6 +90,8 @@ class PayrollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payroll_params
-      params.require(:payroll).permit(:start_date, :end_date)
+			debugger
+      #params.require(:payroll).permit(:start_date, :end_date)
+			params.permit(:start_date, :end_date, :id, :format)
     end
 end

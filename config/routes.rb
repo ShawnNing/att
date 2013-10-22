@@ -5,6 +5,9 @@ Att::Application.routes.draw do
 
   resources :payrolls do 
     resources :employees
+    member do
+     get 'get_employee_hours'
+    end
   end
 
   resources :employees do
