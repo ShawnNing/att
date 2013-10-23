@@ -4,6 +4,9 @@ class PayrollsController < ApplicationController
   # GET /payrolls
   # GET /payrolls.json
   def index
+    @payroll = Payroll.new
+    @start_date = Date.today.last_week.last_week.monday.strftime("%Y/%m/%d")
+    @end_date = Date.today.last_week.sunday.strftime("%Y/%m/%d")
     @payrolls = Payroll.all
   end
   

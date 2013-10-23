@@ -1,1 +1,3 @@
-json.extract! @payroll, :created_at, :updated_at
+json.id @payroll.id.to_s
+json.extract! @payroll, :start_date, :end_date
+

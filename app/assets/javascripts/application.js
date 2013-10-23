@@ -13,4 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 // comment = require turbolinks
+//= require angular.min
+//= require angular-resource.min
 //= require_directory .

@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<div ng-app="anApp">
-  <div ng-controller="EmployeesCtrl">
+<div ng-app="payrollApp">
+  <div ng-controller="PayrollCtrl">
 		<button ng-click="updatePayroll();" class="btn btn-primary">Update</button>
     <table class="table table-striped table-bordered table-condensed">
       <tr>
@@ -43,55 +43,3 @@
   </div>
 </div>
 
-<script type="text/javascript">
-var anApp = angular.module('anApp', ['ui.bootstrap', 'ngResource'])
-.config(function($httpProvider){
-  $httpProvider.defaults.headers.put = {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')};
-});
-
-anApp.controller('EmployeesCtrl', function EmployeesCtrl($scope, $resource) {
-
-  $resource('<%=get_employee_hours_payroll_path(@payroll, :format=>'json')%>').query(function(data) {
-    $scope.employees = data;
-    data.forEach(function(employee) {
-      employee.note = '';
-    });
-  });
-  
-  $resource('<%=payroll_employees_path(@payroll, :format=>'json')%>').query(function(data) {
-    $scope.payroll_employees = data;
-  });
-  
-  $scope.addToPayroll = function(employee) {
-    $scope.payroll_employees.push(employee);
-    $scope.employees.splice($scope.employees.indexOf(employee), 1);
-  };
-  
-  $scope.removeFromPayroll = function(employee) {
-    $scope.employees.push(employee);
-    $scope.payroll_employees.splice($scope.payroll_employees.indexOf(employee), 1);
-  };
-  
-  $scope.sortBy = function(field){
-    if ($scope.predicate == field) $scope.predicate = '-'+field;
-    else $scope.predicate = field;
-  }
-	
-  $scope.updatePayroll = function(){
-	var o = {};
-	o.start_date = '2010-10-07'
-	
-		$resource('<%=payroll_path(@payroll, :format=>'json')%>', {"payroll":{}}, {update:{method:'PUT'}}).update(function(data) {
-			console.log(data);
-		});
-
-
-		//$resource('<%=payroll_path(@payroll, :format=>'json')%>', $scope.payroll_employees, {update: {method:'PUT' }}).save(function(data) {
-//			console.log(data);
-		//});
-  }
-  
-  $scope.predicate = '-num';
-
-});
-</script>
