@@ -25,7 +25,17 @@ Att::Application.routes.draw do
   resources :posts do
     resources :comments
   end
-  
+
+  scope :api do
+    get "/payrolls(.:format)" => "payrolls#index"
+    get "/payrolls/:id(.:format)" => "payrolls#show"
+    post "/payrolls(.:format)" => "payrolls#create"
+		put "/payrolls/:id(.:format)" => "payrolls#update"
+		
+    get "/employees(.:format)" => "employees#index"
+    get "/employees/:id(.:format)" => "employees#show"
+  end
+
   root 'stores#index'
   
   # The priority is based upon order of creation: first created -> highest priority.

@@ -16,14 +16,14 @@
       <button class="btn btn-primary" ng-click="createPayroll('s');">Create</button>
     </form>
     
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table table-striped table-bordered table-condensed" ng-init="initPayrolls();">
       <tr>
         <th><button ng-click="sortBy('num');">Start Date</button></th>
         <th><button ng-click="sortBy('sin');">End Date</button></th>
       </tr>
       <tr ng-repeat="payroll in payrolls | orderBy:predicate" ng-class="employee.class_name()">
-        <td>{{payroll.start_date}}</td>
-        <td>{{payroll.end_date}}</td>
+				 <td><a href="/payrolls/{{payroll.id}}">{{payroll.start_date}}</a></td>
+				 <td><a href="/payrolls/{{payroll.id}}">{{payroll.end_date}}</a></td>
       </tr>
     </table>
 

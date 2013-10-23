@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
-<div ng-app="payrollApp">
+<div ng-app="PayrollApp">
   <div ng-controller="PayrollCtrl">
 		<button ng-click="updatePayroll();" class="btn btn-primary">Update</button>
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table table-striped table-bordered table-condensed" ng-init="initPayroll('<%=@payroll.id%>');">
       <tr>
         <th><button ng-click="sortBy('num');">No</button></th>
         <th><button ng-click="sortBy('sin');">SIN</button></th>
@@ -11,7 +11,7 @@
         <th><button ng-click="sortBy('note');">Note</button></th>
         <th>Action</th>
       </tr>
-      <tr ng-repeat="employee in payroll_employees | orderBy:predicate" ng-class="employee.class_name()">
+      <tr ng-repeat="employee in payroll.employees | orderBy:predicate" ng-class="employee.class_name()">
         <td>{{employee.num}}</td>
         <td>{{employee.sin}}</td>
         <td>{{employee.name}}</td>
@@ -20,8 +20,9 @@
         <td><button ng-click="removeFromPayroll(employee);">Move Down</button></td>
       </tr>
     </table>
+		
     <button class='btn btn-danger'>Cleanup</button>
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table table-striped table-bordered table-condensed" ng-init="initEmployees();">
       <tr>
         <th><button ng-click="sortBy('num');">No</button></th>
         <th><button ng-click="sortBy('sin');">SIN</button></th>
