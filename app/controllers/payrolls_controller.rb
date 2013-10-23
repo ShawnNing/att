@@ -23,6 +23,7 @@ class PayrollsController < ApplicationController
 
   # GET /payrolls/1/edit
   def edit
+		
   end
 
   # POST /payrolls

@@ -78,7 +78,10 @@ anApp.controller('EmployeesCtrl', function EmployeesCtrl($scope, $resource) {
   }
 	
   $scope.updatePayroll = function(){
-		$resource('<%=store_path(@store, :format=>'json')%>', {store:{name:'aaaa'}}, {update:{method:'PUT'}}).update(function(data) {
+	var o = {};
+	o.start_date = '2010-10-07'
+	
+		$resource('<%=payroll_path(@payroll, :format=>'json')%>', {"payroll":{}}, {update:{method:'PUT'}}).update(function(data) {
 			console.log(data);
 		});
 
