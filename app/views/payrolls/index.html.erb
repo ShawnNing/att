@@ -14,43 +14,18 @@
       <br/>
       <pre>Create payroll from <em>{{start_date | date:'fullDate' }}</em> to <em>{{end_date | date:'fullDate' }}</em></pre>
       <button class="btn btn-primary" ng-click="createPayroll('s');">Create</button>
-    </form>
-    
-    <table class="table table-striped table-bordered table-condensed" ng-init="initPayrolls();">
-      <tr>
-        <th><button ng-click="sortBy('num');">Start Date</button></th>
-        <th><button ng-click="sortBy('sin');">End Date</button></th>
-      </tr>
-      <tr ng-repeat="payroll in payrolls | orderBy:predicate" ng-class="employee.class_name()">
-				 <td><a href="/payrolls/{{payroll.id}}">{{payroll.start_date}}</a></td>
-				 <td><a href="/payrolls/{{payroll.id}}">{{payroll.end_date}}</a></td>
-      </tr>
-    </table>
 
+      <table class="table table-striped table-bordered table-condensed" ng-init="initPayrolls();">
+        <tr>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+        <tr ng-repeat="payroll in payrolls | orderBy:predicate" ng-class="employee.class_name()">
+           <td><a href="/payrolls/{{payroll.id}}">{{payroll.start_date}} <span class="glyphicon glyphicon-chevron-right"> </span> {{payroll.end_date}}</a></td>
+           <td><button class="btn btn-primary" ng-click="deletePayroll(payroll.id);">Delete</button></td>
+        </tr>
+      </table>
+      
+    </form>
   </div>
 </div>
-
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @payrolls.each do |payroll| %>
-      <tr>
-        <td><%= link_to payroll.start_date, payroll %></td>
-        <td><%= link_to payroll.end_date, payroll %></td>
-        <td><%= link_to 'Edit', edit_payroll_path(payroll) %></td>
-        <td><%= link_to 'Destroy', payroll, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Payroll', new_payroll_path %>

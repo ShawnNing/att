@@ -20,8 +20,17 @@ PayrollApp.factory('Employee', ['$resource', function($resource) {
     });
   }
 ]);
+
+PayrollApp.factory('Slip', ['$resource', function($resource) {
+    return $resource('/api/slips/:id', {
+      id: '@id'
+    }, {
+      update: {method:'PUT'}
+    });
+  }
+]);
   
-PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Employee) {
+PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Employee, Slip) {
   $scope.dateOptions = {
     'year-format': 'yy',
     'starting-day': 1
@@ -37,12 +46,27 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   }
 	
   $scope.addToPayroll = function(employee){
-      $scope.payroll.employees.push(employee);
+    var slip = new Slip();
+    //slip.employee = employee;
+    slip.start_date = $scope.payroll.start_date;
+    $scope.payroll.slips.push(slip);
   }
 	
   $scope.updatePayroll = function(){
     $scope.payroll.$update(function(data){
 			console.log(data);
+    });
+  }
+  
+  $scope.deletePayroll = function(payroll_id){
+    Payroll.delete({id: payroll_id}, function(data){
+      var i;
+      for (i=0; i<$scope.payrolls.length; i++){
+        if ($scope.payrolls[i].id == payroll_id) break;
+      }
+      if (i>=0 && i<$scope.payrolls.length){
+        $scope.payrolls.splice(i, 1);
+      }
     });
   }
   
@@ -57,8 +81,8 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
 		});
   }
 	
-  $scope.initPayroll = function(id){
-		Payroll.get({'id': id}, function(data){
+  $scope.initPayroll = function(payroll_id){
+		Payroll.get({'id': payroll_id}, function(data){
 			$scope.payroll = data;
 		});
   }
@@ -69,6 +93,28 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
 		});
   }
 
+  $scope.sortBy = function(tableName, fieldName){
+    if (tableName == 'employee') {
+      if ($scope.employeeOrderField == fieldName){
+        $scope.employeeOrderField = '-'+fieldName;
+      }
+      else{
+        $scope.employeeOrderField = fieldName;
+      }
+    }
+    if (tableName == 'slip') {
+      if ($scope.slipOrderField == fieldName){
+        $scope.slipOrderField = '-'+fieldName;
+      }
+      else{
+        $scope.slipOrderField = fieldName;
+      }
+    }    
+  }
+  
+  $scope.employeeOrderField = "-num";
+  $scope.slipOrderField = "-num";
+  
   
 /*  
   Payroll.get({id: '526677de75313245a5f10000'}, function(data){

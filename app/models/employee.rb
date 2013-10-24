@@ -4,8 +4,8 @@ class Employee
   include Mongoid::Paperclip
   
   belongs_to :store
-  belongs_to :payroll
   has_many :punches
+  has_many :slips  
   
   field :num, type: String    
   field :barcode, type: String      

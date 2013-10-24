@@ -48,7 +48,6 @@ class PayrollsController < ApplicationController
   # PATCH/PUT /payrolls/1.json
   def update
     respond_to do |format|
-			debugger
       if @payroll.update(payroll_params)
 				logger.info "1111111111111111111111111111"
         format.html { redirect_to @payroll, notice: 'Payroll was successfully updated.' }
@@ -96,6 +95,6 @@ class PayrollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payroll_params
-      params.require(:payroll).permit(:start_date, :end_date, :id, :format, :employees =>[:num, :name])
+      return params.require(:payroll).permit(:start_date, :end_date, :id, :format, :slips =>[:start_date])
     end
 end
