@@ -10,11 +10,6 @@ class EmployeesController < ApplicationController
     else
       @employees = @store.employees
     end
-
-    respond_to do |format|
-      format.html
-      format.json {render json: @employees}
-    end
   end
 
   # GET /employees/1

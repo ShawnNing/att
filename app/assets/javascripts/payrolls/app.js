@@ -1,3 +1,12 @@
+Array.prototype.removeByItemId = function(elem) {
+  var i;
+  for (i = 0; i < this.length; i++) {
+    if (this[i].id === elem.id) break;
+  }
+  this.splice(i, 1);
+  return this;
+}
+
 var PayrollApp = angular.module('PayrollApp', ['ui.bootstrap', 'ngResource'])
 .config(function($httpProvider){
   $httpProvider.defaults.headers.common = {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'), 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'};
@@ -22,7 +31,8 @@ PayrollApp.factory('Employee', ['$resource', function($resource) {
 ]);
 
 PayrollApp.factory('Slip', ['$resource', function($resource) {
-    return $resource('/api/slips/:id', {
+    return $resource('/api/payrolls/:payroll_id/slips/:id', {
+      payroll_id: '@payroll_id',
       id: '@id'
     }, {
       update: {method:'PUT'}
@@ -47,26 +57,30 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
 	
   $scope.addToPayroll = function(employee){
     var slip = new Slip();
-    //slip.employee = employee;
-    slip.start_date = $scope.payroll.start_date;
-    $scope.payroll.slips.push(slip);
+    slip.payroll_id = $scope.payroll.id;
+    slip.employee_id = employee.id;
+    slip.$save({payroll_id: $scope.payroll.id}, function(data){
+      $scope.payroll.slips.push(slip);
+      $scope.employees.removeByItemId(employee);
+    });
   }
-	
+  
+  $scope.removeFromPayroll = function(slip){
+    Slip.delete({payroll_id: $scope.payroll.id, id:slip.id}, function(data){
+      $scope.payroll.slips.removeByItemId(slip);
+      $scope.employees.push(slip.employee);
+    });
+  }  
+  
   $scope.updatePayroll = function(){
     $scope.payroll.$update(function(data){
 			console.log(data);
     });
   }
   
-  $scope.deletePayroll = function(payroll_id){
-    Payroll.delete({id: payroll_id}, function(data){
-      var i;
-      for (i=0; i<$scope.payrolls.length; i++){
-        if ($scope.payrolls[i].id == payroll_id) break;
-      }
-      if (i>=0 && i<$scope.payrolls.length){
-        $scope.payrolls.splice(i, 1);
-      }
+  $scope.deletePayroll = function(payroll){
+    Payroll.delete({id: payroll.id}, function(data){
+      $scope.payrolls.removeByItemId(payroll);
     });
   }
   
@@ -84,6 +98,10 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   $scope.initPayroll = function(payroll_id){
 		Payroll.get({'id': payroll_id}, function(data){
 			$scope.payroll = data;
+      
+      Slip.query({'payroll_id': payroll_id}, function(data){
+        $scope.payroll.slips = data;
+      });
 		});
   }
 	

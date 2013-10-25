@@ -4,8 +4,7 @@ class Slip
   
   belongs_to :employee
   belongs_to :payroll
-  has_many :punches
+  accepts_nested_attributes_for :payroll
   
-  field :start_date, type: Date
-  field :end_date, type: Date
+  has_many :punches
 end

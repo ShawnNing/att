@@ -1,9 +1,8 @@
 Att::Application.routes.draw do
   resources :punches
 
-  resources :slips
-
   resources :payrolls do 
+    resources :slips
     resources :employees
     member do
      get 'get_employee_hours'
@@ -33,8 +32,10 @@ Att::Application.routes.draw do
 		put "/payrolls/:id(.:format)" => "payrolls#update"
     delete "/payrolls/:id(.:format)" => "payrolls#destroy"
 
-    get "/slips(.:format)" => "slips#index"
-    get "/slips/:id(.:format)" => "slips#show"
+    get "/payrolls/:payroll_id/slips(.:format)" => "slips#index"
+    get "/payrolls/:payroll_id/slips/:id(.:format)" => "slips#show"
+    post "/payrolls/:payroll_id/slips(.:format)" => "slips#create"
+    delete "/payrolls/:payroll_id/slips/:id(.:format)" => "slips#destroy"
 
     get "/employees(.:format)" => "employees#index"
     get "/employees/:id(.:format)" => "employees#show"

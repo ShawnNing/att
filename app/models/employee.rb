@@ -42,9 +42,6 @@ class Employee
   field :notes, type: String  
   field :oid, type: Integer
   
-  #temporary variable, got to be a better way
-  field :work_hours, type: Float
-  
   has_mongoid_attached_file :photo
   
   def get_work_hours(start_date, end_date)
@@ -58,7 +55,7 @@ class Employee
 				wh = wh + (punch.time - last_checkin) * 1.day.seconds / 1.hour.seconds.to_f
 			end
 		end
-		return wh
+		return (wh*100).to_i/100.0
   end
 
 end

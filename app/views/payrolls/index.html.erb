@@ -22,7 +22,7 @@
         </tr>
         <tr ng-repeat="payroll in payrolls | orderBy:predicate" ng-class="employee.class_name()">
            <td><a href="/payrolls/{{payroll.id}}">{{payroll.start_date}} <span class="glyphicon glyphicon-chevron-right"> </span> {{payroll.end_date}}</a></td>
-           <td><button class="btn btn-primary" ng-click="deletePayroll(payroll.id);">Delete</button></td>
+           <td><button class="btn btn-primary" ng-click="deletePayroll(payroll);">Delete</button></td>
         </tr>
       </table>
       

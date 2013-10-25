@@ -1,10 +1,11 @@
 class SlipsController < ApplicationController
+  before_action :load_payroll  
   before_action :set_slip, only: [:show, :edit, :update, :destroy]
 
   # GET /slips
   # GET /slips.json
   def index
-    @slips = Slip.all
+    @slips = @payroll.slips
   end
 
   # GET /slips/1
@@ -24,12 +25,12 @@ class SlipsController < ApplicationController
   # POST /slips
   # POST /slips.json
   def create
+    @payroll = Payroll.find(params[:payroll_id])
     @slip = Slip.new(slip_params)
-
     respond_to do |format|
       if @slip.save
         format.html { redirect_to @slip, notice: 'Slip was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @slip }
+        format.json { render action: 'show', status: :created, location: [@payroll, @slip] }
       else
         format.html { render action: 'new' }
         format.json { render json: @slip.errors, status: :unprocessable_entity }
@@ -69,6 +70,11 @@ class SlipsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def slip_params
-      params[:slip]
+      params.require(:slip).permit(:start_date, :payroll_id, :employee_id)
     end
+    
+    def load_payroll
+      @payroll = Payroll.find(params[:payroll_id])
+    end    
+    
 end
