@@ -1,4 +1,5 @@
 json.id @slip.id.to_s
+json.notes @slip.notes
 json.employee do
   json.id @slip.employee.id.to_s
   json.num @slip.employee.num

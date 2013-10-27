@@ -7,4 +7,6 @@ class Slip
   accepts_nested_attributes_for :payroll
   
   has_many :punches
+	
+	field :notes, type: String
 end

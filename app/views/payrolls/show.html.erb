@@ -8,7 +8,7 @@
         <th><button ng-click="sortBy('slip', 'sin');">SIN</button></th>
         <th><button ng-click="sortBy('slip', 'name');">Name</button></th>
 				<th><button ng-click="sortBy('slip', 'work_hours');">Hours</button></th>
-        <th><button ng-click="sortBy('slip', 'note');">Note</button></th>
+        <th><button ng-click="sortBy('slip', 'notes');">Notes</button></th>
         <th>Action</th>
       </tr>
       <tr ng-repeat="slip in payroll.slips | orderBy:predicate" ng-class="employee.class_name()">
@@ -16,7 +16,7 @@
         <td>{{slip.employee.sin}}</td>
         <td>{{slip.employee.name}}</td>
         <td>{{slip.employee.work_hours}}</td>
-        <td><input type="text" name="note" ng-model="employee.note"></td>
+        <td><input type="text" name="notes" ng-model="slip.notes"></td>
         <td><button class='btn btn-primary' ng-click="removeFromPayroll(slip);">Move Down</button></td>
       </tr>
     </table>

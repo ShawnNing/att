@@ -1,7 +1,8 @@
 json.array!(@slips) do |slip|
   json.id slip.id.to_s
+	json.notes slip.notes
   json.employee do
-    json.id slip.employee.id.to_s
+		json.id slip.employee.id.to_s
     json.num slip.employee.num
     json.sin slip.employee.sin
     json.name slip.employee.name
