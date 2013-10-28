@@ -2,7 +2,8 @@ require 'test_helper'
 
 class StoresControllerTest < ActionController::TestCase
   setup do
-    @store = stores(:one)
+    @store = FactoryGirl.create(:store)
+    cookies[:current_store] = @store.name
   end
 
   test "should get index" do
@@ -18,7 +19,7 @@ class StoresControllerTest < ActionController::TestCase
 
   test "should create store" do
     assert_difference('Store.count') do
-      post :create, store: {  }
+      post :create, store: { name: @store.name }
     end
 
     assert_redirected_to store_path(assigns(:store))
@@ -35,7 +36,7 @@ class StoresControllerTest < ActionController::TestCase
   end
 
   test "should update store" do
-    patch :update, id: @store, store: {  }
+    patch :update, id: @store, store: { name: @store.name }
     assert_redirected_to store_path(assigns(:store))
   end
 

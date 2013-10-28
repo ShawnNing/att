@@ -2,7 +2,9 @@ require 'test_helper'
 
 class EmployeesControllerTest < ActionController::TestCase
   setup do
-    @employee = employees(:one)
+    @store = FactoryGirl.create(:store)
+    cookies[:current_store] = @store.name
+    @employee = FactoryGirl.create(:employee)
   end
 
   test "should get index" do
@@ -18,7 +20,7 @@ class EmployeesControllerTest < ActionController::TestCase
 
   test "should create employee" do
     assert_difference('Employee.count') do
-      post :create, employee: {  }
+      post :create, employee: {num: @employee.num, name: @employee.name, name_cn: @employee.name_cn, sin: @employee.sin}
     end
 
     assert_redirected_to employee_path(assigns(:employee))
@@ -35,7 +37,7 @@ class EmployeesControllerTest < ActionController::TestCase
   end
 
   test "should update employee" do
-    patch :update, id: @employee, employee: {  }
+    patch :update, id: @employee, employee: {num: @employee.num, name: @employee.name, name_cn: @employee.name_cn, sin: @employee.sin}
     assert_redirected_to employee_path(assigns(:employee))
   end
 

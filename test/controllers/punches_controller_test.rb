@@ -2,7 +2,9 @@ require 'test_helper'
 
 class PunchesControllerTest < ActionController::TestCase
   setup do
-    @punch = punches(:one)
+    @store = FactoryGirl.create(:store)
+    cookies[:current_store] = @store.name
+    @punch = FactoryGirl.create(:punch)
   end
 
   test "should get index" do

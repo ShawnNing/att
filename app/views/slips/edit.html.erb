@@ -2,5 +2,10 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @slip %> |
-<%= link_to 'Back', slips_path %>
+<%= link_to 'Show', payroll_slip_path(@payroll, @slip) %> |
+<%= link_to 'Back', payroll_slips_path(@payroll) %>
+
+
+
+<%= link_to 'Show', post_comment_path(@post, @comment) %> |
+<%= link_to 'Back', post_comments_path(@post) %>

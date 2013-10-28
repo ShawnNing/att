@@ -7,21 +7,6 @@ Array.prototype.removeByItemId = function(elem) {
   return this;
 }
 
-function createStateMachine(callBack){
-	return StateMachine.create({
-		initial: 'green',
-		events: [
-			{ name: 'dlDone',  from: 'green',  to: 'yellow' },
-			{ name: 'dlDone',  from: 'yellow',  to: 'red' },
-		],
-		callbacks: {
-			onred: function(event, from, to){
-				callBack();
-			}
-		}
-	});
-}
-
 var PayrollApp = angular.module('PayrollApp', ['ui.bootstrap', 'ngResource'])
 .config(function($httpProvider){
   $httpProvider.defaults.headers.common = {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'), 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'};
@@ -55,6 +40,7 @@ PayrollApp.factory('Slip', ['$resource', function($resource) {
   }
 ]);
   
+  
 PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Employee, Slip) {
   $scope.dateOptions = {
     'year-format': 'yy',
@@ -72,12 +58,9 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
 	
   $scope.addToPayroll = function(employee){
     var slip = new Slip();
-    slip.payroll_id = $scope.payroll.id;
-    slip.employee_id = employee.id;
-    slip.$save({payroll_id: $scope.payroll.id}, function(data){
-      $scope.payroll.slips.push(slip);
-      $scope.employees.removeByItemId(employee);
-    });
+    slip.employee = employee;
+    $scope.payroll.slips.push(slip);
+    $scope.employees.removeByItemId(employee);
   }
   
   $scope.removeFromPayroll = function(slip){
@@ -105,32 +88,27 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   }
 	
 	$scope.removePayrollEmployees = function(){
-		for (var i =0; i < $scope.payroll.slips.length; i++) {
-			$scope.employees.removeByItemId($scope.payroll.slips[i].employee);
+    if (typeof $scope.payroll != "undefined" && typeof $scope.payroll.slips != "undefined" && typeof $scope.employees != "undefined"){
+      for (var i =0; i < $scope.payroll.slips.length; i++) {
+        $scope.employees.removeByItemId($scope.payroll.slips[i].employee);
+      }
     }
 	}
 	
   $scope.initEmployees = function(){
-		if (typeof $scope.fsm == "undefined"){
-			$scope.fsm = createStateMachine($scope.test);
-		}
-
 		Employee.query(function(data){
 			$scope.employees = data;
-			$scope.fsm.dlDone();
+			$scope.removePayrollEmployees();
 		});
   }
 	
   $scope.initPayroll = function(payroll_id){
-		if (typeof $scope.fsm == "undefined"){
-			$scope.fsm = createStateMachine($scope.removePayrollEmployees);
-		}
 		Payroll.get({'id': payroll_id}, function(data){
 			$scope.payroll = data;
       
       Slip.query({'payroll_id': payroll_id}, function(data){
         $scope.payroll.slips = data;
-				$scope.fsm.dlDone();
+				$scope.removePayrollEmployees();
       });
 		});
   }

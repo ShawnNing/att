@@ -29,7 +29,7 @@ class SlipsController < ApplicationController
     @slip = Slip.new(slip_params)
     respond_to do |format|
       if @slip.save
-        format.html { redirect_to @slip, notice: 'Slip was successfully created.' }
+        format.html { redirect_to [@payroll, @slip], notice: 'Slip was successfully created.' }
         format.json { render action: 'show', status: :created, location: [@payroll, @slip] }
       else
         format.html { render action: 'new' }
@@ -43,7 +43,7 @@ class SlipsController < ApplicationController
   def update
     respond_to do |format|
       if @slip.update(slip_params)
-        format.html { redirect_to @slip, notice: 'Slip was successfully updated.' }
+        format.html { redirect_to [@payroll, @slip], notice: 'Slip was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -57,7 +57,7 @@ class SlipsController < ApplicationController
   def destroy
     @slip.destroy
     respond_to do |format|
-      format.html { redirect_to slips_url }
+      format.html { redirect_to payroll_slips_url(@payroll) }
       format.json { head :no_content }
     end
   end

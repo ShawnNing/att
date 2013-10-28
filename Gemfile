@@ -44,3 +44,9 @@ gem 'debugger', group: [:development, :test]
 
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 gem "mongoid-paperclip", :require => "mongoid_paperclip"
+
+group :test do 
+  gem 'faker' 
+  gem 'factory_girl'
+  gem 'factory_girl_rails'
+end

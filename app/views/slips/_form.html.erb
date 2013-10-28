@@ -1,4 +1,4 @@
-<%= form_for(@slip) do |f| %>
+<%= form_for([@payroll, @slip]) do |f| %>
   <% if @slip.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@slip.errors.count, "error") %> prohibited this slip from being saved:</h2>

@@ -47,13 +47,15 @@ class PayrollsController < ApplicationController
   # PATCH/PUT /payrolls/1
   # PATCH/PUT /payrolls/1.json
   def update
+      if params[:slips] then
+        params[:slips_attributes]  = params[:slips]
+        params.delete(:slips)
+      end
     respond_to do |format|
       if @payroll.update(payroll_params)
-				logger.info "1111111111111111111111111111"
         format.html { redirect_to @payroll, notice: 'Payroll was successfully updated.' }
         format.json { head :no_content }
       else
-				logger.info "22222222222222222222222"
         format.html { render action: 'edit' }
         format.json { render json: @payroll.errors, status: :unprocessable_entity }
       end
@@ -95,6 +97,6 @@ class PayrollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payroll_params
-      return params.require(:payroll).permit(:start_date, :end_date, :id, :format, :slips =>[:start_date])
+      return params.permit(:start_date, :end_date, :id, :format, :slips_attributes=>[:id, :notes, :employee=>[:id]])
     end
 end

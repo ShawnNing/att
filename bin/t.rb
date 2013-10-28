@@ -37,7 +37,6 @@ puts payroll.slips.length
 puts payroll.slips[0].notes
 slip_id = payroll.slips[0].id.to_s
 
-
 #puts slip_id
 #params = ActionController::Parameters.new({"slip"=>{"start_date"=>"2013-10-07", "payroll_id"=>"#{payroll_id}"}})
 #p = params.require(:slip).permit(:start_date, :payroll_id)

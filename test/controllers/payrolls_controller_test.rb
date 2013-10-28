@@ -2,7 +2,9 @@ require 'test_helper'
 
 class PayrollsControllerTest < ActionController::TestCase
   setup do
-    @payroll = payrolls(:one)
+    @store = FactoryGirl.create(:store)
+    cookies[:current_store] = @store.name
+    @payroll = FactoryGirl.create(:payroll)
   end
 
   test "should get index" do

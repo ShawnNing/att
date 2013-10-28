@@ -2,7 +2,9 @@ require 'test_helper'
 
 class PostsControllerTest < ActionController::TestCase
   setup do
-    @post = posts(:one)
+    @store = FactoryGirl.create(:store)
+    cookies[:current_store] = @store.name
+    @post = FactoryGirl.create(:post)
   end
 
   test "should get index" do
