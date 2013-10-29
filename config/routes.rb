@@ -32,11 +32,6 @@ Att::Application.routes.draw do
 		put "/payrolls/:id(.:format)" => "payrolls#update"
     delete "/payrolls/:id(.:format)" => "payrolls#destroy"
 
-    get "/payrolls/:payroll_id/slips(.:format)" => "slips#index"
-    get "/payrolls/:payroll_id/slips/:id(.:format)" => "slips#show"
-    post "/payrolls/:payroll_id/slips(.:format)" => "slips#create"
-    delete "/payrolls/:payroll_id/slips/:id(.:format)" => "slips#destroy"
-
     get "/employees(.:format)" => "employees#index"
     get "/employees/:id(.:format)" => "employees#show"
   end

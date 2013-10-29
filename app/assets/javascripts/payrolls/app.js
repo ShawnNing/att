@@ -16,7 +16,7 @@ PayrollApp.factory('Payroll', ['$resource', function($resource) {
     return $resource('/api/payrolls/:id', {
       id: '@id'
     }, {
-      update: {method:'PUT'}
+      update: {method:'PUT', params: {'destroy_children':true}}
     });
   }
 ]);
@@ -25,23 +25,13 @@ PayrollApp.factory('Employee', ['$resource', function($resource) {
     return $resource('/api/employees/:id', {
       id: '@id'
     }, {
+      query:  {method:'GET', isArray:true, params: {start_date: true, end_date: true}},
       update: {method:'PUT'}
     });
   }
 ]);
 
-PayrollApp.factory('Slip', ['$resource', function($resource) {
-    return $resource('/api/payrolls/:payroll_id/slips/:id', {
-      payroll_id: '@payroll_id',
-      id: '@id'
-    }, {
-      update: {method:'PUT'}
-    });
-  }
-]);
-  
-  
-PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Employee, Slip) {
+PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Employee) {
   $scope.dateOptions = {
     'year-format': 'yy',
     'starting-day': 1
@@ -57,13 +47,18 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   }
 	
   $scope.addToPayroll = function(employee){
-    var slip = new Slip();
+    var slip = new Object();
     slip.employee = employee;
     $scope.payroll.slips.push(slip);
     $scope.employees.removeByItemId(employee);
   }
   
   $scope.removeFromPayroll = function(slip){
+    $scope.employees.push(slip.employee);    
+    $scope.payroll.slips.removeByItemId(slip);
+  }  
+  
+  $scope.removeFromPayroll2 = function(slip){
     Slip.delete({payroll_id: $scope.payroll.id, id:slip.id}, function(data){
       $scope.payroll.slips.removeByItemId(slip);
       $scope.employees.push(slip.employee);
@@ -71,7 +66,7 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   }  
   
   $scope.updatePayroll = function(){
-    $scope.payroll.$update(function(data){
+    $scope.payroll.$update({destroy_children: true}, function(data){
 			console.log(data);
     });
   }
@@ -95,8 +90,8 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
     }
 	}
 	
-  $scope.initEmployees = function(){
-		Employee.query(function(data){
+  $scope.initEmployees = function(start_date, end_date){
+		Employee.query({start_date: start_date, end_date: end_date}, function(data){
 			$scope.employees = data;
 			$scope.removePayrollEmployees();
 		});
@@ -105,11 +100,6 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   $scope.initPayroll = function(payroll_id){
 		Payroll.get({'id': payroll_id}, function(data){
 			$scope.payroll = data;
-      
-      Slip.query({'payroll_id': payroll_id}, function(data){
-        $scope.payroll.slips = data;
-				$scope.removePayrollEmployees();
-      });
 		});
   }
 	
@@ -136,6 +126,11 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
         $scope.slipOrderField = fieldName;
       }
     }    
+  }
+  
+  $scope.balanced = function(slip){
+    if (slip.work_hour == slip.r_work_hour) return "warning";
+    return "danger";
   }
   
   $scope.employeeOrderField = "-num";

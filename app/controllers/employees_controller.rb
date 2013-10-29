@@ -8,6 +8,8 @@ class EmployeesController < ApplicationController
       @payroll = Payroll.find(params[:payroll_id])
       @employees = @payroll.employees
     else
+      @start_date = params[:start_date] if params[:start_date] != nil
+      @end_date = params[:end_date] if params[:end_date] != nil
       @employees = @store.employees
     end
   end

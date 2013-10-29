@@ -7,32 +7,34 @@
         <th><button class="btn" ng-click="sortBy('slip', 'num');">No</button></th>
         <th><button class="btn" ng-click="sortBy('slip', 'sin');">SIN</button></th>
         <th><button class="btn" ng-click="sortBy('slip', 'name');">Name</button></th>
-				<th><button class="btn" ng-click="sortBy('slip', 'work_hours');">Hours</button></th>
+				<th><button class="btn" ng-click="sortBy('slip', 'work_hours');">Work_hours</button></th>
         <th><button class="btn" ng-click="sortBy('slip', 'notes');">Notes</button></th>
         <th>Action</th>
       </tr>
-      <tr ng-repeat="slip in payroll.slips | orderBy:predicate" ng-class="employee.class_name()">
+      <tr ng-repeat="slip in payroll.slips | orderBy:predicate" ng-class="balanced(slip)">
         <td>{{slip.employee.num}}</td>
         <td>{{slip.employee.sin}}</td>
         <td>{{slip.employee.name}}</td>
-        <td>{{slip.employee.work_hours}}</td>
+        <td><input type="text" name="notes" ng-model="slip.work_hours" class="form-control" title="{{slip.r_work_hours}}" data-toggle="tooltip"></td>
         <td><input type="text" name="notes" ng-model="slip.notes"></td>
         <td><button class='btn btn-primary' ng-click="removeFromPayroll(slip);">Move Down</button></td>
       </tr>
     </table>
 		
     <button class='btn btn-danger'>Cleanup</button>
-    <table class="table table-striped table-bordered table-condensed" ng-init="initEmployees();">
+    <table class="table table-striped table-bordered table-condensed" ng-init="initEmployees('<%=@payroll.start_date%>', '<%=@payroll.end_date%>');">
       <tr>
         <th><button class="btn" ng-click="sortBy('employee', 'num');">No</button></th>
         <th><button class="btn" ng-click="sortBy('employee', 'sin');">SIN</button></th>
         <th><button class="btn" ng-click="sortBy('employee', 'name');">Name</button></th>
+        <th><button class="btn" ng-click="sortBy('employee', 'r_work_hours');">Hours</button></th>
         <th>Action</th>
       </tr>
       <tr ng-repeat="employee in employees | orderBy:employeeOrderField" ng-class="employee.class_name()">
         <td>{{employee.num}}</td>
         <td>{{employee.sin}}</td>
         <td>{{employee.name}}</td>
+        <td>{{employee.r_work_hours}}</td>
         <td><button class='btn btn-primary' ng-click="addToPayroll(employee);">Move Up</button></td>
       </tr>
     </table>
