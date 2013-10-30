@@ -31,6 +31,12 @@ PayrollApp.factory('Employee', ['$resource', function($resource) {
   }
 ]);
 
+PayrollApp.filter('toTime', function() {
+	return function(seconds) {
+		return moment.unix(seconds).format("HH:mm");
+	}
+});
+	
 PayrollApp.directive('context', [function() {
     return {
       restrict    : 'A',
@@ -50,7 +56,8 @@ PayrollApp.directive('context', [function() {
                 display: "block",
                 left: event.clientX - modal.offsetLeft + 'px',
                 top: event.clientY - modal.offsetTop + 'px'
-              }).attr('idx', event.currentTarget.getAttribute('idx'));
+              }).attr('idx', event.currentTarget.getAttribute('idx'))
+							.attr('date', event.currentTarget.getAttribute('date'));
               
               last = event.timeStamp;
             });
@@ -76,13 +83,28 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, slip, start_date, end_
   $scope.slip = slip;
   $scope.start_date = moment(start_date);
   $scope.end_date = moment(end_date);
-  $scope.dates = [];
+  $scope.dates = {};
   for (var dt = $scope.start_date; dt.diff($scope.end_date)<=0; dt.add('days', 1)){
-    $scope.dates.push(dt.clone());
+		var punches = [];
+
+    for (var i = 0; i < $scope.slip.punches.length; i++){
+      var punch = $scope.slip.punches[i];
+      var tm = moment.unix(punch.time);
+      if (tm.isSame(dt, 'day')){
+        punches.push(punch);
+      }
+    }
+		
+		$scope.dates[dt.format('YY-MM-DD')] = punches;
   }
   
   $scope.ok = function () {
-    $modalInstance.close($scope.selected.item);
+		var punches = [];
+		for (var dt in $scope.dates){
+			punches = punches.concat($scope.dates[dt]);
+		}
+		$scope.slip.punches = punches;
+    $modalInstance.close($scope.slip);
   };
 
   $scope.cancel = function () {
@@ -92,25 +114,10 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, slip, start_date, end_
   $scope.deletePunch = function (e) {
     var ul = $('#menu');
     var idx = ul.attr('idx');
-  };
-  
-  $scope.getPunches = function (dt) {
-    var punches = [];
-    
-    for (var i = 0; i < $scope.slip.punches.length; i++){
-      var punch = $scope.slip.punches[i];
-      var tm = moment.unix(punch.time);
-      if (tm.isSame(dt, 'day')){
-        //this doesm't work for unknown reason
-        //punches.push({'time': tm.format("HH-mm"), 'action': punch.action});
-        //this doesn't work either
-        punches.push(tm);
-        //only the simple string works
-        //punches.push(tm.format("HH:mm"));
-      }
-    }
+		var dt = ul.attr('date');
+		$scope.dates[dt].splice(idx, 1);
 
-    return punches;
+		console.log(idx+"-"+dt);
   };
   
 };
@@ -208,8 +215,8 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, $modal, Payrol
       }
     });
 
-    modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
+    modalInstance.result.then(function(returned_slip) {
+			slip = returned_slip;
     }, function () {
       console.info('Modal dismissed at: ' + new Date());
     });

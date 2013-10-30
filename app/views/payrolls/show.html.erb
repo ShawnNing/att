@@ -46,10 +46,10 @@
         </div>
         <div class="modal-body">
             <table class="table table-striped table-bordered table-condensed">
-                <tr ng-repeat="dt in dates">
-                    <td>{{ dt.format("YY-MM-DD") }}</td>
-                    <td ng-repeat="punch in getPunches(dt)">
-                      <div context="menu" idx="{{$index}}">{{$index}}-{{punch}}</div>
+                <tr ng-repeat="(dt, punches) in dates">
+                    <td>{{dt}}</td>
+                    <td ng-repeat="punch in punches">
+                      <div context="menu" idx="{{$index}}" date="{{dt}}">{{punch.time | toTime}}</div>
                     </td>
                 </tr>
             </table>
