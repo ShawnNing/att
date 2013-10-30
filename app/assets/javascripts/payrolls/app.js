@@ -31,7 +31,91 @@ PayrollApp.factory('Employee', ['$resource', function($resource) {
   }
 ]);
 
-PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Employee) {
+PayrollApp.directive('context', [function() {
+    return {
+      restrict    : 'A',
+      scope       : '@&', 
+      compile: function compile(tElement, tAttrs, transclude) {
+        return {
+          post: function postLink(scope, iElement, iAttrs, controller) {
+            var ul = $('#' + iAttrs.context), last = null;
+            ul.css({ 'display' : 'none'});
+
+            $(iElement).contextmenu(function(event) {
+              event.preventDefault();
+              //get the div.modal-content;
+              var modal = event.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+              ul.css({
+                position: "fixed",
+                display: "block",
+                left: event.clientX - modal.offsetLeft + 'px',
+                top: event.clientY - modal.offsetTop + 'px'
+              }).attr('idx', event.currentTarget.getAttribute('idx'));
+              
+              last = event.timeStamp;
+            });
+            
+            $(document).click(function(event) {
+              var target = $(event.target);
+              if(!target.is(".popover") && !target.parents().is(".popover")) {
+                if(last === event.timeStamp)
+                  return;  
+                ul.css({
+                  'display' : 'none'
+                });
+              }
+            });
+          }
+        };
+      }
+    };
+  }]);
+  
+var ModalInstanceCtrl = function ($scope, $modalInstance, slip, start_date, end_date) {
+
+  $scope.slip = slip;
+  $scope.start_date = moment(start_date);
+  $scope.end_date = moment(end_date);
+  $scope.dates = [];
+  for (var dt = $scope.start_date; dt.diff($scope.end_date)<=0; dt.add('days', 1)){
+    $scope.dates.push(dt.clone());
+  }
+  
+  $scope.ok = function () {
+    $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  
+  $scope.deletePunch = function (e) {
+    var ul = $('#menu');
+    var idx = ul.attr('idx');
+  };
+  
+  $scope.getPunches = function (dt) {
+    var punches = [];
+    
+    for (var i = 0; i < $scope.slip.punches.length; i++){
+      var punch = $scope.slip.punches[i];
+      var tm = moment.unix(punch.time);
+      if (tm.isSame(dt, 'day')){
+        //this doesm't work for unknown reason
+        //punches.push({'time': tm.format("HH-mm"), 'action': punch.action});
+        //this doesn't work either
+        punches.push(tm);
+        //only the simple string works
+        //punches.push(tm.format("HH:mm"));
+      }
+    }
+
+    return punches;
+  };
+  
+};
+
+PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, $modal, Payroll, Employee) {
   $scope.dateOptions = {
     'year-format': 'yy',
     'starting-day': 1
@@ -100,6 +184,9 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
   $scope.initPayroll = function(payroll_id){
 		Payroll.get({'id': payroll_id}, function(data){
 			$scope.payroll = data;
+      for (var i =0; i < $scope.payroll.slips.length; i++) {
+        $scope.payroll.slips[i].active = false;
+      }
 		});
   }
 	
@@ -109,6 +196,25 @@ PayrollApp.controller('PayrollCtrl', function PayrollCtrl($scope, Payroll, Emplo
 		});
   }
 
+  $scope.editPunches = function(slip){
+    var modalInstance = $modal.open({
+      templateUrl: 'editPunches.html',
+      controller: ModalInstanceCtrl,
+      windowClass: 'modal-huge',
+      resolve: {
+        start_date:  function() {return $scope.payroll.start_date;},
+        end_date:  function() {return $scope.payroll.end_date;},
+        slip: function() {return slip;}
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      console.info('Modal dismissed at: ' + new Date());
+    });
+  }
+  
   $scope.sortBy = function(tableName, fieldName){
     if (tableName == 'employee') {
       if ($scope.employeeOrderField == fieldName){
