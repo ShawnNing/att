@@ -108,6 +108,6 @@ class PayrollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payroll_params
-      return params.permit(:start_date, :end_date, :id, :format, :slips_attributes=>[:id, :notes, :work_hours, :employee=>[:id]])
+      return params.permit(:start_date, :end_date, :id, :format, :slips_attributes=>[:id, :notes, :work_hours, :punches=>[:time], :employee=>[:id]])
     end
 end

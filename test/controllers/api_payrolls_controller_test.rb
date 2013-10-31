@@ -52,10 +52,6 @@ class ApiPayrollsControllerTest < ActionController::TestCase
     payroll.update(p)
     payroll.reload
     puts payroll.slips.count
-#    slip1.reload
-    #assert_equal(payroll.start_date, @payroll.start_date+2.day)
-    #assert_equal(slip1.notes, 'notes11')
-    #assert_equal(payroll.slips.count, 2)
 
 
   end

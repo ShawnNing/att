@@ -116,8 +116,22 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, slip, start_date, end_
     var idx = ul.attr('idx');
 		var dt = ul.attr('date');
 		$scope.dates[dt].splice(idx, 1);
-
-		console.log(idx+"-"+dt);
+  };
+  
+	$scope.insertAfter = function (e) {
+    var ul = $('#menu');
+    var idx = ul.attr('idx');
+		var dt = ul.attr('date');
+		
+		$scope.dates[dt].splice(idx, 0, {time: $scope.dates[dt][idx].time});
+	}
+	
+  $scope.insertBefore = function (e) {
+    var ul = $('#menu');
+    var idx = ul.attr('idx');
+		var dt = ul.attr('date');
+		
+		$scope.dates[dt].splice(idx, 0, {time: $scope.dates[dt][idx].time});
   };
   
 };
