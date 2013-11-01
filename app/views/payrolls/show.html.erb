@@ -49,7 +49,9 @@
                 <tr ng-repeat="(dt, punches) in dates">
                     <td>{{dt}}</td>
                     <td ng-repeat="punch in punches">
-                      <div context="menu" idx="{{$index}}" date="{{dt}}">{{punch.time | toTime}}</div>
+                      <div context="menu" idx="{{$index}}" date="{{dt}}">
+                        <input type="time" class="form-control" name="tm" ng-model="punch" timestamp />
+                      </div>
                     </td>
                 </tr>
             </table>

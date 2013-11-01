@@ -1,4 +1,22 @@
 <p id="notice"><%= notice %></p>
 
+<div ng-app="PunchApp">
+  <div ng-controller="punchCtrl" ng-init="initPunchTime('<%=@punch.time%>');">
+
+  <form class="form-inline" role="form">
+    <div class="form-group"><input type="time" class="form-control" name="tm" ng-model="tm" timestamp /></div>
+    <div class="form-group"><input type="date" class="form-control" name="dt" ng-model="dt" timestamp /></div>
+  </form>
+
+  
+    {{tm}}
+    <br/>
+    {{dt}}
+  
+  <button ng-click="test();">ss</button>
+  </div>
+</div>
+
+<br/>
 <%= link_to 'Edit', edit_punch_path(@punch) %> |
 <%= link_to 'Back', punches_path %>

@@ -4,7 +4,7 @@ class PunchesController < ApplicationController
   # GET /punches
   # GET /punches.json
   def index
-    @punches = Punch.all
+    @punches = Punch.all.limit(5)
   end
 
   # GET /punches/1

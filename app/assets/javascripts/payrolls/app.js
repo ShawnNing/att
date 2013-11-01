@@ -1,3 +1,13 @@
+Array.prototype.unique= function() {
+    var unique= [];
+    for (var i = 0; i < this.length; i += 1) {
+        if (unique.indexOf(this[i]) == -1) {
+            unique.push(this[i])
+        }
+    }
+    return unique;
+};
+
 Array.prototype.removeByItemId = function(elem) {
   var i;
   for (i = 0; i < this.length; i++) {
@@ -37,6 +47,27 @@ PayrollApp.filter('toTime', function() {
 	}
 });
 	
+PayrollApp.directive('timestamp', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      function parser(text) {
+        return moment(elm.attr('date')+" "+text).unix();
+      }
+
+      function formatter(text) {
+        console.log(text);
+        return moment.unix(text).format("HH:mm");
+      }
+      
+      elm.attr('date', moment.unix(scope.punch).format("YYYY-MM-DD"));
+      ctrl.$parsers.push(parser);
+      ctrl.$formatters.push(formatter);
+    }
+  };
+});
+
 PayrollApp.directive('context', [function() {
     return {
       restrict    : 'A',
@@ -91,11 +122,11 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, slip, start_date, end_
       var punch = $scope.slip.punches[i];
       var tm = moment.unix(punch.time);
       if (tm.isSame(dt, 'day')){
-        punches.push(punch);
+        punches.push(punch.time);
       }
     }
 		
-		$scope.dates[dt.format('YY-MM-DD')] = punches;
+		$scope.dates[dt.format('YY-MM-DD')] = punches.unique();
   }
   
   $scope.ok = function () {

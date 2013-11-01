@@ -34,6 +34,9 @@ Att::Application.routes.draw do
 
     get "/employees(.:format)" => "employees#index"
     get "/employees/:id(.:format)" => "employees#show"
+    
+    get "/punches(.:format)" => "punches#index"
+    get "/punches/:id(.:format)" => "punches#show"
   end
 
   root 'stores#index'
