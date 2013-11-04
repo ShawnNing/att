@@ -41,33 +41,70 @@ PayrollApp.factory('Employee', ['$resource', function($resource) {
   }
 ]);
 
-PayrollApp.filter('toTime', function() {
-	return function(seconds) {
-		return moment.unix(seconds).format("HH:mm");
+PayrollApp.filter('toTotal', function() {
+	return function(punches) {
+    var total = 0;
+    if (typeof punches != "undefined"){
+      for (var i=0; i<punches.length; i+=2){
+        if (typeof punches[i+1] != 'undefined' ){
+          total = total + (punches[i+1].tm-punches[i].tm);
+        }
+      }
+    }
+		return total;
 	}
 });
-	
+
+PayrollApp.filter('toDate', function() {
+	return function(punches) {
+    var dts = [];
+    if (typeof punches != "undefined"){
+      for (var i=0; i<punches.length; i++){
+        var dt = moment.unix(punches[i].tm).format("YY-MM-DD");
+        if (dts.indexOf(dt) == -1) dts.push(dt);
+      }
+    }
+    if (dts.length==1) return dts[0];
+		return dts;
+	}
+});
+
+PayrollApp.directive('punchGroup', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    scope: {punches: '=ngModel'},
+    templateUrl: 'punch-group.html',
+  };
+});
+
 PayrollApp.directive('timestamp', function() {
   return {
     restrict: 'A',
     require: 'ngModel',
+    //scope:{tm:'=tm'},
     link: function(scope, elm, attrs, ctrl) {
       function parser(text) {
         return moment(elm.attr('date')+" "+text).unix();
       }
 
       function formatter(text) {
-        console.log(text);
         return moment.unix(text).format("HH:mm");
       }
       
-      elm.attr('date', moment.unix(scope.punch).format("YYYY-MM-DD"));
+      elm.attr('date', moment.unix(scope.punch.tm).format("YYYY-MM-DD"));
       ctrl.$parsers.push(parser);
       ctrl.$formatters.push(formatter);
     }
   };
 });
 
+PayrollApp.filter('toTime', function() {
+	return function(seconds) {
+		return moment.unix(seconds).format("HH:mm");
+	}
+});
+	
 PayrollApp.directive('context', [function() {
     return {
       restrict    : 'A',

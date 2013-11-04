@@ -40,6 +40,13 @@
     </table>
   </div>
 
+  <script type="text/ng-template" id="punch-group.html">
+    <td>{{punches | toDate}}-{{punches | toTotal}}</td>
+    <td ng-repeat="punch in punches">
+      <input type="time" class="form-control" ng-model="punch.tm" timestamp />
+    </td>
+  </script>
+
     <script type="text/ng-template" id="editPunches.html">
         <div class="modal-header">
             <h3>{{slip.punches.length}}</h3>
@@ -48,9 +55,10 @@
             <table class="table table-striped table-bordered table-condensed">
                 <tr ng-repeat="(dt, punches) in dates">
                     <td>{{dt}}</td>
+                    <tr ng-model="punches" punch-group />
                     <td ng-repeat="punch in punches">
                       <div context="menu" idx="{{$index}}" date="{{dt}}">
-                        <input type="time" class="form-control" name="tm" ng-model="punch" timestamp />
+                        <input type="time" class="form-control" ng-model="punch.tm" timestamp />
                       </div>
                     </td>
                 </tr>

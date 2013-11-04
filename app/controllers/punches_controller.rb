@@ -4,7 +4,8 @@ class PunchesController < ApplicationController
   # GET /punches
   # GET /punches.json
   def index
-    @punches = Punch.all.limit(5)
+    emp = Employee.where(:num=>'032').first
+    @punches = emp.punches
   end
 
   # GET /punches/1

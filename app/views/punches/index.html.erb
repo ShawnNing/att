@@ -1,21 +1,23 @@
 <div ng-app="PunchApp">
-  <div ng-controller="punchCtrl">
-  <h1>Listing punches</h1>
-  
-<script type="text/ng-template" id="punch-group.html">
-  <td>{{date}}-{{punches.total}}</td>
-  <td ng-repeat="punch in punches">
-    <input type="time" class="form-control" name="tm" ng-model="punch" timestamp />
-  </td>
-</script>
-  
-    <table class="table table-striped table-bordered table-condensed" ng-init="initPunches();">
 
-      <tr ng-model="punches" punch-group />
+  <script type="text/ng-template" id="punches-for-days.html">
+    <tr><td>{{punches.length}}</td></tr>
+  </script>
 
+  <script type="text/ng-template" id="punches-for-day.html">
+    <td>{{punches | toDate}}</td>
+    <td ng-repeat="punch in punches">
+      <input type="time" class="form-control" ng-model="punch.tm" timestamp />
+    </td>
+    <td>{{punches | toTotal}}</td>
+  </script>
+
+  <div ng-controller="punchCtrl" ng-init="initPunches();">
+    <h1>Listing punches</h1>
+    
+    <table class="table table-striped table-bordered table-condensed" ng-model="punches" punches-for-days>
     </table>
-    
-    
+      
   </div>
 </div>
 
