@@ -18,8 +18,16 @@ class PayrollRecord
 	field :holiday, type: Float, default: 0
 	
 	def total
-		return 0 if in1== nil  or out1 == nil 
-		return ((out1 - in1)/3600.0).round(2) if in2 == nil  or out2 == nil
-		return (((out1 - in1)+(out2 - in2))/3600.0).round(2) 
+		total = 0
+		if in1== nil  or out1 == nil then
+			total = 0
+		elsif in2 == nil  or out2 == nil then
+			total = (out1 - in1)/3600.0
+			total = total - meal
+		else
+			total = ((out1 - in1)+(out2 - in2))/3600.0
+			total = total - meal
+		end
+		return total.round(2)
 	end
 end

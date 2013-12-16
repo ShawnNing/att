@@ -63,8 +63,10 @@ class Employee
 		payroll_records = self.payroll_records.where(:date => { "$lte" => end_dt, "$gte" => start_dt }).order_by(:date.asc)
 		
 		grand_total = 0
+		grand_total_meal = 0
 		payroll_records.each do |pr|
 			grand_total = grand_total + pr.total
+			grand_total_meal = grand_total_meal + pr.meal
 		end
 		
 		template_file = "template1.odt"
@@ -92,6 +94,7 @@ class Employee
 			end
 			
 			r.add_field :grand_total, grand_total.round(2)
+			r.add_field :total_meal, grand_total_meal.round(2)
 		end
 
 		odt_file = report.generate

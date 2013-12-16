@@ -17,10 +17,13 @@ class PayrollRecordsController < ApplicationController
 	
   def report
 		if params[:date] != nil then
-			@dt = Date.parse(params[:date])
-			pdf_file = @employee.payroll_report(@dt)
+			dt = Date.parse(params[:date])
+			start_dt = dt.beginning_of_week
+			end_dt = dt.end_of_week
+			
+			pdf_file = @employee.payroll_report(start_dt, end_dt)
 
-			send_file(pdf_file, :type => 'application/pdf', :disposition => 'attachment', :filename => "report-#{@dt}")
+			send_file(pdf_file, :type => 'application/pdf', :disposition => 'attachment', :filename => "report--#{@employee.num}--#{start_dt}--#{end_dt}")
 		end
   end
 
@@ -73,7 +76,7 @@ class PayrollRecordsController < ApplicationController
   def destroy
     @payroll_record.destroy
     respond_to do |format|
-      format.html { redirect_to payroll_records_url }
+      format.html { redirect_to employee_payroll_records_url(@employee) }
       format.json { head :no_content }
     end
   end

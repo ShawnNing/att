@@ -2,5 +2,8 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @payroll_record %> |
-<%= link_to 'Back', payroll_records_path %>
+<%= link_to 'Show', employee_payroll_record_path(@employee, @payroll_record) %> |
+<%= link_to 'Back', employee_payroll_records_path(@employee) %>
+
+<%= link_to 'Show', post_comment_path(@post, @comment) %> |
+<%= link_to 'Back', post_comments_path(@post) %>
