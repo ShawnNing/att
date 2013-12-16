@@ -1,7 +1,9 @@
 <div ng-app="PunchApp">
 
   <script type="text/ng-template" id="punches-for-days.html">
-    <tr><td>{{punches.length}}</td></tr>
+		<tr ng-repeat="date in dates()" ng-model="get_punches(date)" punches-for-day>
+		<td>{{date}}</td>
+		</tr>
   </script>
 
   <script type="text/ng-template" id="punches-for-day.html">

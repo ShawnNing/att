@@ -45,6 +45,10 @@ gem 'debugger', group: [:development, :test]
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 gem "mongoid-paperclip", :require => "mongoid_paperclip"
 
+gem 'rubyzip', "~> 0.9.9"
+gem 'roo'
+gem 'odf-report'
+
 group :test do 
   gem 'faker' 
   gem 'factory_girl'

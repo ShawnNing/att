@@ -1,0 +1,31 @@
+<%= form_for([@employee, @payroll_record]) do |f| %>
+  <% if @payroll_record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@payroll_record.errors.count, "error") %> prohibited this payroll_record from being saved:</h2>
+
+      <ul>
+      <% @payroll_record.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+		<%= f.date_select :date%>
+		<br/>
+
+		<table>
+			<tr><td><%=	f.label :in1 %></td><td><%= f.time_select :in1%></td></tr>
+			<tr><td><%=	f.label :out1 %></td><td><%= f.time_select :out1 %></td></tr>
+			<tr><td><%=	f.label :overtime %></td><td><%= f.text_field :overtime %></td></tr>
+			<tr><td><%=	f.label :meal %></td><td><%= f.text_field :meal %></td></tr>
+			<tr><td><%=	f.label :sick %></td><td><%= f.text_field :sick %></td></tr>
+			<tr><td><%=	f.label :holiday %></td><td><%= f.text_field :holiday %></td></tr>
+			<tr><td><%=	f.label :other %></td><td><%= f.text_field :other %></td></tr>
+		</table>
+
+		<br/>
+		<%= f.submit %>
+  </div>
+<% end %>

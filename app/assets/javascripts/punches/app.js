@@ -40,8 +40,21 @@ PunchApp.factory('Punch', ['$resource', function($resource) {
     require: 'ngModel',
     scope: {punches: '=ngModel'},
     templateUrl: 'punches-for-days.html',
-    link: function(){
-      console.log("ss");
+    link: function(scope, element, attrs) {
+			scope.dates = function(){
+				var dts = [];
+				if (typeof scope.punches != "undefined"){
+					for (var i=0; i<scope.punches.length; i++){
+						var dt = moment.unix(scope.punches[i].tm).format("YY-MM-DD");
+						if (dts.indexOf(dt) == -1) dts.push(dt);
+					}
+				}
+				return dts;
+			};
+			scope.get_punches = function(dt){
+				console.log(dt);
+				return ['aa', dt, 'bb'];
+			};
     }
   };
 }).directive('punchesForDay', function() {

@@ -1,0 +1,76 @@
+<h1>Name: <%=@employee.name%></h1>
+<h1>Emp Num: <%=@employee.num%></h1>
+<h1>Department: <%=@employee.department%></h1>
+
+<table border="solid black 1px">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>In</th>
+      <th>Out</th>
+      <th>In</th>
+      <th>Out</th>
+      <th>Overtime</th>
+      <th>Meal</th>
+      <th>Sick</th>
+      <th>Holiday</th>
+      <th>Other</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+
+  <tbody>
+		<%total = 0%>
+    <% @payroll_records.each do |payroll_record| %>
+      <tr>
+        <td><%= payroll_record.date.strftime("%d/%m/%Y %a") %></td>
+        <td><%= payroll_record.in1 != nil ? payroll_record.in1.strftime("%l:%M %p") : '' %></td>
+        <td><%= payroll_record.out1 != nil ? payroll_record.out1.strftime("%l:%M %p") : '' %></td>
+        <td><%= payroll_record.in2 != nil ? payroll_record.in2.strftime("%l:%M %p") : '' %></td>
+        <td><%= payroll_record.out2 != nil ? payroll_record.out2.strftime("%l:%M %p") : '' %></td>
+        <td><%= payroll_record.overtime %></td>
+        <td><%= payroll_record.meal %></td>
+        <td><%= payroll_record.sick %></td>
+        <td><%= payroll_record.holiday %></td>
+        <td><%= payroll_record.other %></td>
+        <td><%= payroll_record.total %></td>
+        
+				<td><%= link_to 'Show', employee_payroll_record_path(@employee, payroll_record) %></td>
+        <td><%= link_to 'Edit', edit_employee_payroll_record_path(@employee, payroll_record) %></td>
+        <td><%= link_to 'Destroy', [@employee, payroll_record], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+				<% total = total + payroll_record.total%>
+      </tr>
+    <% end %>
+		<tr>
+		<td>Total</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+			<td></td>
+			<td><%=total.round(2)%></td>
+		</tr>
+  </tbody>
+</table>
+
+<br/>
+<%= link_to 'Payroll', employee_payroll_records_path(@employee), :id => 'payroll_records' %><%=date_select :date, :date, :default=>@dt%>
+<br/>	
+<%= link_to 'download', :action=>'report', :date=>@dt, :format=>'pdf'  %>
+<br/>
+<%= link_to 'New Payroll record', new_employee_payroll_record_path %>
+<script>
+$(function() {
+	$("#payroll_records").on("click", function(event) {
+		var y = $("#date_date_1i").val();
+		var m = $("#date_date_2i").val();
+		var d = $("#date_date_3i").val();
+		var href = $("#payroll_records").attr("href");
+		$("#payroll_records").attr("href", href+"?date="+y+"-"+m+"-"+d);
+	});
+});
+</script>

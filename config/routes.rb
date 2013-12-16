@@ -1,4 +1,7 @@
 Att::Application.routes.draw do
+
+  resources :payroll_reports
+
   resources :punches
 
   resources :payrolls do 
@@ -8,8 +11,14 @@ Att::Application.routes.draw do
      get 'get_employee_hours'
     end
   end
-
+	
   resources :employees do
+	  resources :payroll_records do 
+			collection do
+				get 'report'
+			end
+		end
+	
     member do
      get 'set_current'
     end
