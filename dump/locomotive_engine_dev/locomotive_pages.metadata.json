@@ -1,0 +1,1 @@
+{ "options" : { "create" : "locomotive_pages" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "locomotive_engine_dev.locomotive_pages", "name" : "_id_" } ] }

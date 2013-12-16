@@ -1,0 +1,3 @@
+mongodump
+mongorestore --drop
+

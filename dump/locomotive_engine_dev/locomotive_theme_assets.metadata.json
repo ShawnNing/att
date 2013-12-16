@@ -1,0 +1,1 @@
+{ "options" : { "create" : "locomotive_theme_assets" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "locomotive_engine_dev.locomotive_theme_assets", "name" : "_id_" } ] }
