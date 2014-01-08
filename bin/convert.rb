@@ -1,15 +1,16 @@
 #Employee.destroy_all
-PayrollRecord.destroy_all
+#PayrollRecord.destroy_all
+
 def sec_to_hour(sec)
-	
 end
-xlsx = "/home/sning/Downloads/Fixed Employee Schedule.xlsx"
+
+xlsx = "/home/sning/Downloads/Denishs Schedule (1).xlsx"
 
 book = Roo::Excelx.new(xlsx)
 
 emps = {}
 book.each_with_pagename do |name, sheet|	
-	(3 .. 5).each do |i|
+	(3 .. 4).each do |i|
 		row = sheet.row(i)
 		sin = row[1]
 		if emps[sin] == nil then
