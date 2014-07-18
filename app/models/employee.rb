@@ -59,20 +59,23 @@ class Employee
 		return (wh*100).to_i/100.0
   end
 
-	def payroll_report(start_dt, end_dt)
+	def payroll_report(start_dt, end_dt, print_tm=nil)
 		payroll_records = self.payroll_records.where(:date => { "$lte" => end_dt, "$gte" => start_dt }).order_by(:date.asc)
 		
 		grand_total = 0
 		grand_total_meal = 0
+		grand_total_holiday = 0
 		payroll_records.each do |pr|
 			grand_total = grand_total + pr.total
 			grand_total_meal = grand_total_meal + pr.meal
+			grand_total_holiday = grand_total_holiday + pr.holiday
 		end
 		
 		template_file = "template1.odt"
 		
 		report = ODFReport::Report.new(template_file) do |r|
-			r.add_field :report_time, Time.now.strftime("%d/%m/%Y  %l:%M %p")
+			print_tm = Time.now if print_tm==nil
+			r.add_field :report_time, print_tm.strftime("%d/%m/%Y  %l:%M %p")
 			r.add_field :employee_name, self.name
 			r.add_field :employee_no, self.num
 			r.add_field :department, self.department
@@ -87,7 +90,7 @@ class Employee
 				t.add_column(:meal, :meal)
 				t.add_column(:overtime, :overtime)
 				t.add_column(:sick, :sick)
-				t.add_column(:holiday, :holiday)
+				t.add_column(:holiday){|pr| pr.holiday.round(2)}
 				t.add_column(:other, :other)
 							
 				t.add_column(:total, :total)
@@ -95,6 +98,7 @@ class Employee
 			
 			r.add_field :grand_total, grand_total.round(2)
 			r.add_field :total_meal, grand_total_meal.round(2)
+			r.add_field :total_holiday, grand_total_holiday.round(2)
 		end
 
 		odt_file = report.generate

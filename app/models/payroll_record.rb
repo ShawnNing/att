@@ -23,11 +23,12 @@ class PayrollRecord
 			total = 0
 		elsif in2 == nil  or out2 == nil then
 			total = (out1 - in1)/3600.0
-			total = total - meal
+			total = total - meal + holiday
 		else
 			total = ((out1 - in1)+(out2 - in2))/3600.0
-			total = total - meal
+			total = total - meal + holiday
 		end
+		total = ((total*100+12.5)/25.0).to_i*25.0/100.0
 		return total.round(2)
 	end
 end
