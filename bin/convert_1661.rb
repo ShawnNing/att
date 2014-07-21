@@ -27,14 +27,16 @@ def process(rs, sheet, dt)
 		emp['name'] = row[1]
 		emp['dept'] = row[3]
 		emp['pos'] = row[4]
+		emp['hours'] = row[6]
 		emp['punches'] = []
 		
+		total_hours = 0
 		(0 .. 6).each do |k|
 			tin = row[8+2*k]
 			tout = row[8+2*k+1]
 			tin = 0 if tin==nil
 			tout = 0 if tout==nil
-			tin = tin+12 if tin < 7
+			#tin = tin+12 if tin < 7
 			tout = tout+12 if tout<tin
 			
 			#verify(tin, tout)
@@ -42,6 +44,10 @@ def process(rs, sheet, dt)
 			dt_out = dt+k.days+tout.hours
 			
 			emp['punches'] << [dt_in, dt_out]
+			total_hours = total_hours+(dt_out-dt_in)/3600.0
+		end
+		if (emp['hours']  - total_hours).abs > 0.01 then
+			puts "hours not same #{emp['hours'] } !== #{total_hours} at row #{r}"
 		end
 		
 #puts emp
@@ -78,6 +84,7 @@ def process(rs, sheet, dt)
 		#puts sin
 		#puts emp['name']
 		
+		total2 = 0
 		emp['punches'].each do |d|
 			if d[1] - d[0] > 0.1 then
 				pr = PayrollRecord.new
@@ -96,15 +103,6 @@ def process(rs, sheet, dt)
           puts pr.out1
         end
         
-        diff1 = pr.out1-pr.in1
-        rnd1 = rand((-9 .. 9))
-        rnd2 = rand((rnd1-7 ..rnd1+7))
-				pr.in1 = pr.in1+rnd1.minutes
-				pr.out1 = pr.out1+rnd2.minutes
-        diff2 = pr.out1-pr.in1
-        #puts (diff2-diff1)/60
-        
-        
         pr.meal = 0.5
 				pr.holiday = 0
 				d0_str = d[0].strftime("%-m/%-d/%Y")
@@ -115,13 +113,33 @@ def process(rs, sheet, dt)
 						puts "holiday #{emp['sin']} #{d0_str} #{pr.holiday}"
 					end
 				end
-				
+
+
+				if (emp['hours']/0.25-(emp['hours']/0.25).to_i)==0 then
+
+					rnd1 = rand((-9 .. 9))
+					rnd2 = rand((rnd1-7 ..rnd1+7))
+					pr.in1 = pr.in1+rnd1.minutes
+					pr.out1 = pr.out1+rnd2.minutes
+					pr.total = pr.cal_total1
+				else
+					rnd1 = rand((-5 .. 5))
+					pr.in1 = pr.in1+rnd1.minutes
+					pr.out1 = pr.out1+rnd1.minutes
+					#puts "#{pr.in1}\t#{pr.out1}\t#{pr.cal_total2}    #{r}"
+					pr.total = pr.cal_total2
+				end
+
 				pr.employee = employee
 				pr.date = d[0]
 				pr.save
+				
+				total2 = total2+pr.total
 			end
 		end
-		
+		if (total2 - emp['hours']).abs>0.01 then
+			puts "#{total2}======#{emp['hours']}   #{r}"
+		end
 	end
 end
 

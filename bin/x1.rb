@@ -1,5 +1,5 @@
 start_tm = Time.parse('2014/03/17 0:00:00 UTC')
-end_tm = Time.parse('2014/06/23 0:00:00 UTC')
+end_tm = Time.parse('2014/07/7 0:00:00 UTC')
 tm0 = start_tm
 while(tm0<end_tm)
   (9 .. 22).each do |h|
