@@ -52,11 +52,9 @@ def process(rs, sheet, dt)
 			employee.name = emp['name']
 			employee.sin = emp['sin']
 			
-			puts name.downcase
 			if $empnos[emp['name'].downcase] != nil then
 				employee.num = $empnos[emp['name'].downcase]
 			else
-				puts "cannot find empno #{$empnos[name]} for #{name}"
 				employee.num = "39%03d" % $empno
 				$empno = $empno + 1
 			end
@@ -84,12 +82,33 @@ def process(rs, sheet, dt)
 			if d[1] - d[0] > 0.1 then
 				pr = PayrollRecord.new
 				rd = rand
-				pr.in1 = d[0]+(rand(16)-8).minutes
-				pr.out1 = d[1]+(rand(16)-8).minutes
-				pr.meal = 0.5
+
+				pr.in1 = d[0]
+				pr.out1 = d[1]
+
+        if pr.in1.hour >= 10 then
+          pr.in1 = pr.in1 - 30.minutes
+        elsif pr.out1.hour <= 22 then
+          pr.out1 = pr.out1 + 30.minutes
+        else
+          puts "error xxxxxxxxxxx #{emp}"
+          puts pr.in1
+          puts pr.out1
+        end
+        
+        diff1 = pr.out1-pr.in1
+        rnd1 = rand((-9 .. 9))
+        rnd2 = rand((rnd1-7 ..rnd1+7))
+				pr.in1 = pr.in1+rnd1.minutes
+				pr.out1 = pr.out1+rnd2.minutes
+        diff2 = pr.out1-pr.in1
+        #puts (diff2-diff1)/60
+        
+        
+        pr.meal = 0.5
 				pr.holiday = 0
 				d0_str = d[0].strftime("%-m/%-d/%Y")
-				if ['5/19/2014','6/1/2014','7/13/2014'].include?(d0_str) then
+				if ['4/18/2014','5/19/2014','7/1/2014'].include?(d0_str) then
 					if $emps[emp['sin']]!=nil then
 						pr.holiday = $emps[emp['sin']][d[0].to_date] 
 						pr.holiday = 0 if pr.holiday==nil
@@ -121,6 +140,7 @@ def read_data
 			d1 = $2
 			d2 = $3
 		end
+    d2.gsub!('Jaly', 'July')
 		d1 = d1.sub('.', ' ')+", 2014"
 		d2 = d2.sub('.', ' ')+", 2014"
 		d1 = Date.strptime(d1, "%b %d, %Y")
@@ -162,17 +182,11 @@ $empno = 127
 def add_employee(name, sin, dt, hour)
 	return if sin == nil
 
-	puts name.downcase
+	#puts name.downcase
 	if $empnos[name.downcase] != nil then
-		puts $empnos[name.downcase]
+		#puts $empnos[name.downcase]
 	else
 		puts "cannot find empno #{$empnos[name]} for #{name}"
-	end
-
-
-
-	if dt.strftime("%Y-%-m-%-d") == "2014-5-4" then
-		dt = Date.parse("2014/5/19")
 	end
 
 	if $emps[sin]==nil then
@@ -223,18 +237,23 @@ end
 
 def read_empno
 	ls = File.read('data/emp.txt')
+  n = 0
 	ls.split("\n").each do |l|
+    n = n+1
+    next if n < 6
+    next if l[0] != '|'
 		foo, name, empno = l.split('|')
 		empno.strip!
 		name.strip!
 		#first, last = name.split(' ')
 		#name = last+' '+first if last!=nil
 		$empnos[name.downcase] = empno
+    
 	end
-	puts $empnos
+	#puts $empnos
 end
 
 read_empno
 read_holiday
 
-#read_data
+read_data

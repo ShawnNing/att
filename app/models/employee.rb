@@ -45,6 +45,15 @@ class Employee
   
   has_mongoid_attached_file :photo
   
+  def in?(tm)
+    self.payroll_records.each do |pr|
+      if pr.in1<tm and pr.out1>tm then
+        return true 
+      end
+    end
+    return false
+  end
+  
   def get_work_hours(start_date, end_date)
     wh = 0
 		last_checkin = nil

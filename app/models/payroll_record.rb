@@ -28,7 +28,7 @@ class PayrollRecord
 			total = ((out1 - in1)+(out2 - in2))/3600.0
 			total = total - meal + holiday
 		end
-		total = ((total*100+12.5)/25.0).to_i*25.0/100.0
+		total = (total*4+0.5).to_i/4.0
 		return total.round(2)
 	end
 end
