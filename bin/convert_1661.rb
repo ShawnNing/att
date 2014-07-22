@@ -114,9 +114,8 @@ def process(rs, sheet, dt)
 					end
 				end
 
-
-				if (emp['hours']/0.25-(emp['hours']/0.25).to_i)==0 then
-
+        dlt = (pr.out1 - pr.in1)/3600.0/0.25
+				if (dlt-dlt.to_i)==0 then
 					rnd1 = rand((-9 .. 9))
 					rnd2 = rand((rnd1-7 ..rnd1+7))
 					pr.in1 = pr.in1+rnd1.minutes
@@ -139,6 +138,9 @@ def process(rs, sheet, dt)
 		end
 		if (total2 - emp['hours']).abs>0.01 then
 			puts "#{total2}======#{emp['hours']}   #{r}"
+      employee.payroll_records.each do |pr|
+        puts "#{pr.in1}--#{pr.out1}--#{pr.total}"
+      end
 		end
 	end
 end
